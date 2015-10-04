@@ -1,6 +1,6 @@
 # ---- 00_InitialSetup ----
 
-venture="Vietnam"
+venture <- as.character(args[1])
 dateReport <- format(now(), "%Y%m%d")
 weekReport <- paste0("Week",isoweek(now()))
 rawDataFile <- file.path("../..","1_Input",venture,"PMP_Data")
