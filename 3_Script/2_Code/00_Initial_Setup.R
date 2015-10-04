@@ -1,6 +1,14 @@
 # ---- 00_InitialSetup ----
 
 venture <- as.character(args[1])
+ventureShort <- switch (venture,
+                        "Indonesia" = "ID",
+                        "Malaysia" = "MY",
+                        "Philippines" = "PH",
+                        "Singapore" = "SG",
+                        "Thailand" = "TH",
+                        "Vietnam" = "VN")
+
 dateReport <- format(now(), "%Y%m%d")
 weekReport <- paste0("Week",isoweek(now()))
 rawDataFile <- file.path("../..","1_Input",venture,"PMP_Data")

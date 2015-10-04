@@ -53,6 +53,9 @@ finalData <- siop_atp_matching_purchasability_stock_volumetric %>%
                Tiering_in_each_CAT,
                Black_Stock_Items,
                payment_terms,
-               supplier_type)
+               supplier_type,
+               Final_SKU,
+               tax1,
+               tax2)
 
 save(finalData, file = file.path(rDataFile,"finalData.RData"))

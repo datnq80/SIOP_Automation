@@ -25,6 +25,7 @@ if (ATPShortTailType=="Cateogry_Percentile"){
 # Get only needed column from ATP_Multisource data
 atp_multisource_matching <- select(atp_multisource_shortail,
                                    sku,
+                                   Final_SKU,
                                    atpCategory=category,
                                    Overall_Rank,
                                    Category_Rank,

@@ -9,23 +9,24 @@ write.csv(uniqueSupplier, file.path(outputFolder,"Seller_List.csv"), row.names =
 unlink("../5_Batch/Basis_SQL_New.csv")
 unlink("../5_Batch/whRatios.csv")
 unlink("../5_Batch/Seller_List.csv")
-file.copy(file.path(outputFolder,"Basis_SQL_New.csv"), "../5_Batch/Basis_SQL_New.csv")
-file.copy(file.path(outputFolder,"whRatios.csv"), "../5_Batch/whRatios.csv")
-file.copy(file.path(outputFolder,"Seller_List.csv"), "../5_Batch/Seller_List.csv")
+file.copy(file.path(outputFolder,"Basis_SQL_New.csv"), file.path("../5_Batch",venture,"Basis_SQL_New.csv"))
+file.copy(file.path(outputFolder,"whRatios.csv"), file.path("../5_Batch",venture,"whRatios.csv"))
+file.copy(file.path(outputFolder,"Seller_List.csv"), file.path("../5_Batch",venture,"Seller_List.csv"))
 
-macroFile <- file.path("../5_Batch/VN_Bottom Up_SI&OP MWH.xlsb")
+macroFile <- file.path("../5_Batch",venture,paste0(ventureShort,"_Bottom Up_SI&OP MWH.xlsb"))
 if (file.exists(macroFile))
         unlink(macroFile)
-file.copy("../../1_Input/Vietnam/Output_Templates/VN_Bottom Up_SI&OP MWH.xlsb",
+file.copy(file.path("../../1_Input",venture,"Output_Templates",paste0(ventureShort,"_Bottom Up_SI&OP MWH.xlsb")),
           macroFile)
 
-setwd("../5_Batch/")
-system(paste0("cscript ExcelVBATrigger.vbs"))
-setwd("../2_Code/")
+setwd(file.path("../5_Batch",venture))
+system(paste0("cscript ",ventureShort,"_ExcelVBATrigger.vbs"))
+setwd("../../2_Code/")
 
-finalFile <- file.path(outputFolder,paste0("VN_Bottom Up_SI&OP MWH_Test_",dateReport,".xlsb"))
+finalFile <- file.path(outputFolder,paste0(ventureShort,"_Bottom Up_SI&OP MWH_Test_",dateReport,".xlsb"))
 
 if (file.exists(finalFile))
         unlink(finalFile)
-file.copy("../5_Batch/VN_Bottom Up_SI&OP MWH_Final.xlsb",
+file.copy(file.path("../5_Batch/",venture,paste0(ventureShort,"_Bottom Up_SI&OP MWH_Final.xlsb")),
           finalFile)
+

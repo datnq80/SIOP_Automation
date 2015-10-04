@@ -1,3 +1,5 @@
+args <- commandArgs(trailingOnly = TRUE)
+
 options(java.parameters = "-Xmx6g")
 library(dplyr)
 library(lubridate)
@@ -60,8 +62,6 @@ runningAll <- function(){
     
     trackingLogDF <- runningStep(stepSource = "../2_Code/00_Initial_Setup.R", stepName = "00_Initial_Setup", trackingLogDF, jobName, runID)
     setTxtProgressBar(pb, 1)
-    trackingLogDF <- runningStep(stepSource = "../2_Code/01_downloadPMPExtracts.R", stepName = "01_downloadPMPExtracts", trackingLogDF, jobName, runID)
-    setTxtProgressBar(pb, 2)
     trackingLogDF <- runningStep(stepSource = "../2_Code/02_ATPSIOPMatching.R", stepName = "02_ATPSIOPMatching", trackingLogDF, jobName, runID)
     setTxtProgressBar(pb, 3)
     trackingLogDF <- runningStep(stepSource = "../2_Code/03_PurchasabilityData.R", stepName = "03_PurchasabilityData", trackingLogDF, jobName, runID)
