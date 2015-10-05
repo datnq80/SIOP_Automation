@@ -2,11 +2,7 @@
 
 # Load Sales Destination Data
 salesDestinationLevels <- read.csv(file.path(rawDataFileWeekly,"Sales_Destinations_Levels.csv"),
-                                   encoding = "UTF-8", stringsAsFactors = FALSE,
-                                   col.names = c("sku","Net_Item_sold","city",
-                                                 "postcode","Destination_level1",
-                                                 "Destination_level2","Destination_level3",
-                                                 "Destination_level4","Origin"))
+                                   encoding = "UTF-8", stringsAsFactors = FALSE)
 # Load Manual Input Data - WH Allocation
 tempwb <- loadWorkbook(filename = file.path(manualInputFile,"WH_Allocation.xlsx"))
 whAllocation <- readWorksheet(tempwb,sheet = 1)
