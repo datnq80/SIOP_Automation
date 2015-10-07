@@ -45,6 +45,7 @@ Temporary Items
 # My configuration
 *.ini
 *.*
+*
 !*.R
 !dummy.files
 !*.md
