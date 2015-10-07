@@ -2,7 +2,7 @@
 
 load(file.path(rDataFile,"siop_atp_matching_purchasability.RData"))
 
-StockCondition <- read.csv(file.path(rawDataFileDaily,"Outright Inventory Ex VN.csv"),
+StockCondition <- read.csv(file.path(rawDataFileDaily,paste0("Outright Inventory Ex ",ventureShort,".csv")),
                            stringsAsFactors = FALSE)
 
 StockConditionOnly <- select(StockCondition, 1,7,44:46)
@@ -19,8 +19,5 @@ siop_atp_matching_purchasability_stock <- mutate(siop_atp_matching_purchasabilit
                                                  Black1=ifelse(is.na(Red),0,Red),
                                                  Black2=ifelse(is.na(Red),0,Red))
 
-siop_atp_matching_purchasability_stock_volumetric <- siop_atp_matching_purchasability_stock %>%
-        mutate(Volumetric_cm3=package_height*package_width*package_length)
-
-save(siop_atp_matching_purchasability_stock_volumetric,
-     file = file.path(rDataFile,"siop_atp_matching_purchasability_stock_volumetric.RData"))
+save(siop_atp_matching_purchasability_stock,
+     file = file.path(rDataFile,"siop_atp_matching_purchasability_stock.RData"))
