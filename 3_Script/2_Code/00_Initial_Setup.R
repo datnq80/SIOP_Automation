@@ -39,11 +39,11 @@ params <- readWorksheet(tempwb, 1)
 row.names(params) <- params$Parameter
 param_1 <- as.numeric(params$Value[1])
 if (!is.na(param_1)){
-    ATPShortTailType <- "Cateogry_Percentile"
+    ATPShortTailType <- "Category_Percentile"
     Threshold <- param_1
 } else{
     param_2 <- as.numeric(params$Value[2])
-    ATPShortTailType <- "Cateogry_Rank"
+    ATPShortTailType <- "Category_Rank"
     Threshold <- param_2
 }
 SKURankingMethod <- trimws(params$Value[3])

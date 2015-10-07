@@ -24,7 +24,7 @@ dim CurrentDirectory
 CurrentDirectory = fso.GetAbsolutePathName(".")
 WScript.Echo CurrentDirectory
 
-Set xlBook = xlApp.Workbooks.Open(CurrentDirectory + "\VN_Bottom Up_SI&OP MWH.xlsb", 0, True)
+Set xlBook = xlApp.Workbooks.Open(CurrentDirectory + "\VN_Bottom Up_SI&OP MWH.xlsm", 0, True)
 
 If Err.Number <> 0 Then
 WScript.Echo "Error in DoStep1: " & Err.Description
@@ -46,7 +46,7 @@ WScript.Echo "Error in DoStep1: " & Err.Description
 Err.Clear
 End If
 
-xlBook.SaveAs CurrentDirectory + "\VN_Bottom Up_SI&OP MWH_Final.xlsb"
+xlBook.SaveAs CurrentDirectory + "\VN_Bottom Up_SI&OP MWH_Final.xlsm"
 xlApp.Quit 
 
 

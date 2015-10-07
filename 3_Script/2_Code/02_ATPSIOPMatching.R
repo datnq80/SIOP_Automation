@@ -25,7 +25,7 @@ if (SKURankingMethod=="Retail with Multisource MP"){
 }
 
 # Filter only shortail SKUs in ATP_Multisource data
-if (ATPShortTailType=="Cateogry_Percentile"){
+if (ATPShortTailType=="Category_Percentile"){
     atp_multisource_shortail <- filter(atp_multisource, Cumulative_Weight_in_each_CAT<=Threshold)
 } else {
     atp_multisource_shortail <- filter(atp_multisource, Category_Rank<=Threshold)
@@ -82,7 +82,6 @@ siop_multi_wh <- siop_multi_wh %>%
     mutate(Net_Items_W3=as.numeric(Net_Items_W3)) %>%
     mutate(Net_Items_W2=as.numeric(Net_Items_W2)) %>%
     mutate(Net_Items_W1=as.numeric(Net_Items_W1))
-    
 
 # Filled the NA value in ATP_Multisource data with 0
 atp_multisource_matching[is.na(atp_multisource_matching)] <- 0
@@ -92,7 +91,7 @@ siop_atp_matching <- inner_join(siop_multi_wh,
                                 atp_multisource_matching,
                                 by=c("SKU"="sku"))
 siop_atp_matching <- siop_atp_matching %>%
-        mutate(Cat.level1=atpCategory)
+    mutate(Cat.level1=atpCategory)
 
 # Calculate the XD stocks available
 siop_atp_matching <- mutate(siop_atp_matching, 

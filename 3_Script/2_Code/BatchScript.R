@@ -25,18 +25,7 @@ runningStep <- function(stepSource, stepName, trackingLogDF, jobName, runID){
     trackingLogDF <- trackingLog(trackingLogDF, jobName, runID,
                                  stepName, "Start", "Step Note")
     
-    tryCatch(source(file = stepSource, echo = FALSE),
-             error = function(e){
-                 trackingLogDF <<- trackingLog(trackingLogDF, jobName, runID,
-                                               stepName, "Error", as.character(e))
-             },
-             warning=function(e) {
-                 trackingLogDF <<- trackingLog(trackingLogDF, jobName, runID,
-                                               stepName, "Warning", as.character(e))
-             },
-             finally={
-                 
-             })
+    source(file = stepSource, echo = FALSE)
     
     trackingLogDF <- trackingLog(trackingLogDF, jobName, runID,
                                  stepName, "End", "Step Note")

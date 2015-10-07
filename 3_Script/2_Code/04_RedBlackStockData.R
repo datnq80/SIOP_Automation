@@ -8,10 +8,11 @@ StockCondition <- read.csv(file.path(rawDataFileDaily,paste0("Outright Inventory
 StockConditionOnly <- select(StockCondition, 1,7,44:46)
 colnames(StockConditionOnly) <- c("SKU","Black_Stock_Items","Red","Black1","Black2")
 StockConditionOnly <- StockConditionOnly %>%
-        mutate(Black_Stock_Items=ifelse(Black1>0|Black2>0,
-                                        Black_Stock_Items,0))
+    mutate(Black_Stock_Items=ifelse(Black1>0|Black2>0,
+                                    Black_Stock_Items,0))
 
-siop_atp_matching_purchasability_stock <- left_join(siop_atp_matching_purchasability, StockConditionOnly,
+siop_atp_matching_purchasability_stock <- left_join(siop_atp_matching_purchasability, 
+                                                    StockConditionOnly,
                                                     by=c("SKU"="SKU"))
 
 siop_atp_matching_purchasability_stock <- mutate(siop_atp_matching_purchasability_stock,
