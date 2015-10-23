@@ -1,3 +1,5 @@
+args <- commandArgs(trailingOnly = TRUE)
+
 options(java.parameters = "-Xmx6g")
 library(dplyr)
 library(lubridate)
@@ -23,18 +25,7 @@ runningStep <- function(stepSource, stepName, trackingLogDF, jobName, runID){
     trackingLogDF <- trackingLog(trackingLogDF, jobName, runID,
                                  stepName, "Start", "Step Note")
     
-    tryCatch(source(file = stepSource, echo = FALSE),
-             error = function(e){
-                 trackingLogDF <<- trackingLog(trackingLogDF, jobName, runID,
-                                               stepName, "Error", as.character(e))
-             },
-             warning=function(e) {
-                 trackingLogDF <<- trackingLog(trackingLogDF, jobName, runID,
-                                               stepName, "Warning", as.character(e))
-             },
-             finally={
-                 
-             })
+    source(file = stepSource, echo = FALSE)
     
     trackingLogDF <- trackingLog(trackingLogDF, jobName, runID,
                                  stepName, "End", "Step Note")
@@ -60,8 +51,6 @@ runningAll <- function(){
     
     trackingLogDF <- runningStep(stepSource = "../2_Code/00_Initial_Setup.R", stepName = "00_Initial_Setup", trackingLogDF, jobName, runID)
     setTxtProgressBar(pb, 1)
-    trackingLogDF <- runningStep(stepSource = "../2_Code/01_downloadPMPExtracts.R", stepName = "01_downloadPMPExtracts", trackingLogDF, jobName, runID)
-    setTxtProgressBar(pb, 2)
     trackingLogDF <- runningStep(stepSource = "../2_Code/02_ATPSIOPMatching.R", stepName = "02_ATPSIOPMatching", trackingLogDF, jobName, runID)
     setTxtProgressBar(pb, 3)
     trackingLogDF <- runningStep(stepSource = "../2_Code/03_PurchasabilityData.R", stepName = "03_PurchasabilityData", trackingLogDF, jobName, runID)

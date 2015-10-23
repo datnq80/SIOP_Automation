@@ -1,8 +1,17 @@
 # ---- 02_ATPSIOPMatching ----
 
 # Load ATP_MUltisource
-atp_multisource <- read.csv(file.path(rawDataFileDaily,paste0("ATP Multisource VN.csv")),
-                            stringsAsFactors = FALSE)
+atp_multisource <- read.csv(file.path(rawDataFileDaily,paste0("ATP Multisource ",ventureShort,".csv")),
+                            stringsAsFactors = FALSE,
+                            col.names = c("sku","Product_Name","NumberMultisourceSKU",
+                                          "Multisource_parent_sku","Final_SKU","category",
+                                          "X_Docking","Ware_house","Dropshipping","Total_Bob_reservations",
+                                          "Visibility","Purchasability","Total_Revenue","Units_Sold",
+                                          "Sourceability","Business_Unit","Seller_Supplier","Category_Rank",
+                                          "BU_Rank","Overall_Rank","Shipment_Route","Weight","Cumulative_Weight",
+                                          "General_Tiering","Cumulative_Weight_in_each_CAT","Tiering_in_each_CAT",
+                                          "ATP","Non_ATP","Days_of_Cover","Weight_Days","BU_Ship","BI_Status"))
+
 #SKU ranking
 if (SKURankingMethod=="Retail with Multisource MP"){
     temp <- atp_multisource %>% group_by(Final_SKU) %>%
@@ -11,12 +20,16 @@ if (SKURankingMethod=="Retail with Multisource MP"){
         mutate(Ranking=row_number(-temp$Max_Revenue)) %>%
         select(1,3)
     atp_multisource <- left_join(atp_multisource, temp, by=c("Final_SKU"))
-}else{
+    retailSKU <- filter(atp_multisource, Business_Unit=="Retail")$Final_SKU
+    atp_multisource <- filter(atp_multisource, Final_SKU %in% retailSKU)
+}else if (SKURankingMethod=="Retail Only"){
+    atp_multisource <- filter(atp_multisource, Business_Unit=="Retail")
+}else {
     atp_multisource <- atp_multisource %>% mutate(Ranking=Overall_Rank)
 }
 
 # Filter only shortail SKUs in ATP_Multisource data
-if (ATPShortTailType=="Cateogry_Percentile"){
+if (ATPShortTailType=="Category_Percentile"){
     atp_multisource_shortail <- filter(atp_multisource, Cumulative_Weight_in_each_CAT<=Threshold)
 } else {
     atp_multisource_shortail <- filter(atp_multisource, Category_Rank<=Threshold)
@@ -25,20 +38,23 @@ if (ATPShortTailType=="Cateogry_Percentile"){
 # Get only needed column from ATP_Multisource data
 atp_multisource_matching <- select(atp_multisource_shortail,
                                    sku,
+                                   Final_SKU,
+                                   NumberMultisourceSKU,
                                    atpCategory=category,
                                    Overall_Rank,
                                    Category_Rank,
                                    Tiering_in_each_CAT,
+                                   General_Tiering,
                                    X_Docking,
                                    Ware_house,
                                    Total_Bob_reservations,
                                    Ranking)
 
 # Load SIOP_Multi_WH data
-siop_multi_wh <- read.csv(file.path(rawDataFileDaily,"SIOP_VN_multi_WH_Test.csv"),
+siop_multi_wh <- read.csv(file.path(rawDataFileDaily,paste0("SIOP_",ventureShort,"_multi_WH_Test.csv")),
                           stringsAsFactors = FALSE, 
                           col.names = c("SKU","product_Name","Brand","Cat.level1",
-                                        "Cat.level2","Cat.level3","Business_Unit",
+                                        "Business_Unit",
                                         "PO_Type","Visible","Sourceability_WH1","Sourceability_WH2",
                                         "Unit_Price","special_price","Purchase_price_WH1","Purchase_Price_WH2",
                                         "Lowest_Purchase_price","Supplier_lowest_price","Net_Revenue",
@@ -57,6 +73,20 @@ siop_multi_wh <- read.csv(file.path(rawDataFileDaily,"SIOP_VN_multi_WH_Test.csv"
                                         "package_length","package_width","supplier_type","supply_po_average","Leadtime",
                                         "purchasable","tax1","tax2","payment_terms"))
 
+siop_multi_wh <- siop_multi_wh %>%
+    mutate(package_height=as.numeric(package_height)) %>%
+    mutate(package_width=as.numeric(package_width)) %>%
+    mutate(package_length=as.numeric(package_length)) %>%
+    mutate(Volumetric_cm3=package_height*package_width*package_length) %>%
+    mutate(Net_Rev_W4=as.numeric(Net_Rev_W4)) %>%
+    mutate(Net_Rev_W3=as.numeric(Net_Rev_W3)) %>%
+    mutate(Net_Rev_W2=as.numeric(Net_Rev_W2)) %>%
+    mutate(Net_Rev_W1=as.numeric(Net_Rev_W1)) %>%
+    mutate(Net_Items_W4=as.numeric(Net_Items_W4)) %>%
+    mutate(Net_Items_W3=as.numeric(Net_Items_W3)) %>%
+    mutate(Net_Items_W2=as.numeric(Net_Items_W2)) %>%
+    mutate(Net_Items_W1=as.numeric(Net_Items_W1))
+
 # Filled the NA value in ATP_Multisource data with 0
 atp_multisource_matching[is.na(atp_multisource_matching)] <- 0
 
@@ -65,7 +95,7 @@ siop_atp_matching <- inner_join(siop_multi_wh,
                                 atp_multisource_matching,
                                 by=c("SKU"="sku"))
 siop_atp_matching <- siop_atp_matching %>%
-        mutate(Cat.level1=atpCategory)
+    mutate(Cat.level1=atpCategory)
 
 # Calculate the XD stocks available
 siop_atp_matching <- mutate(siop_atp_matching, 
